@@ -6,7 +6,7 @@ $(function() {
     }
   })
     .then(response => {
-      $('#root').html(`<p>${response.username}</p>`);
+      $('#name').text(`${response.username}`);
     })
     .catch(console.log);
 
@@ -27,6 +27,10 @@ $(function() {
         });
       })
       .emit('authenticate', { token: sessionStorage.getItem('token') });
+  });
+
+  $('#logout').click(() => {
+    sessionStorage.setItem('token', '');
   });
 
   scrollMsgToBottom();

@@ -119,8 +119,10 @@ app.get(
   }
 );
 
+app.get('/logout', (req, res) => res.redirect('login'));
+
 app.get('/', (req, res) =>
-  res.sendFile(path.resolve(__dirname, 'client', 'index.html'))
+  res.sendFile(path.resolve(__dirname, 'client', 'register.html'))
 );
 
 io.sockets

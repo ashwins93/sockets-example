@@ -69,6 +69,11 @@
             .val(err.message);
         });
         $("#registration-form input").val("");
+        $("<a>")
+          .addClass("btn btn-success")
+          .attr("href", "/profile")
+          .appendTo($("#registration-form"))
+          .text("Go to chat room");
       })
       $("#repeat-password").keyup(function (e) {
         if ($(this).val() !== $("#password").val()) {

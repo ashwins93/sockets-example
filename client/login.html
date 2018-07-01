@@ -52,6 +52,11 @@
               .addClass("text-success")
               .text(data.message);
             sessionStorage.setItem('token', data.token);
+            $("<a>")
+              .addClass("btn btn-success")
+              .attr("href", "/profile")
+              .appendTo($("#login-form"))
+              .text("Go to chat room");
           }
         }).catch(err => {
           $("#status-text")
