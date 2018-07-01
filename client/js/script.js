@@ -16,24 +16,30 @@ $(function() {
     socket
       .on('authenticated', function() {
         // console.log('Authenticated');
+        $('#new-message').keypress(function(e) {
+          if (e.which === 13) {
+            socket.emit('message', $(this).val());
+            $(this).val('');
+          }
+        });
+        socket.on('message', ({ name, message }) => {
+          addMessageToWindow(`${name}: ${message}`);
+        });
       })
       .emit('authenticate', { token: sessionStorage.getItem('token') });
   });
 
   scrollMsgToBottom();
-
-  $('#new-message').keypress(function(e) {
-    if (e.which === 13) {
-      $('<li>')
-        .appendTo($('#messages'))
-        .text($(this).val())
-        .addClass('list-group-item');
-      $(this).val('');
-      scrollMsgToBottom();
-    }
-  });
 });
 
 function scrollMsgToBottom() {
   $('#messages-window').scrollTop($('#messages-window').height());
+}
+
+function addMessageToWindow(message) {
+  $('<li>')
+    .appendTo($('#messages'))
+    .text(message)
+    .addClass('list-group-item');
+  scrollMsgToBottom();
 }

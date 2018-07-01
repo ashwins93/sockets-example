@@ -143,10 +143,15 @@ io.sockets
         }
       })
       .catch(console.log);
+
     socket.on('disconnect', () => {
       users[socket.username].sockets = users[socket.username].sockets.filter(
         id => id !== socket.id
       );
+    });
+
+    socket.on('message', msg => {
+      io.emit('message', { name: socket.username, message: msg });
     });
   });
 
