@@ -1,35 +1,36 @@
-const express = require("express"),
+const express = require('express'),
   app = express(),
-  http = require("http").Server(app),
-  io = require("socket.io")(http),
-  path = require("path"),
-  bodyParser = require("body-parser"),
-  mongoose = require("mongoose"),
-  User = require("./models/user"),
-  passport = require("passport"),
-  JWTStrategy = require("passport-jwt").Strategy,
-  ExtractJwt = require("passport-jwt").ExtractJwt,
-  jwt = require("jsonwebtoken");
+  http = require('http').Server(app),
+  io = require('socket.io')(http),
+  path = require('path'),
+  bodyParser = require('body-parser'),
+  mongoose = require('mongoose'),
+  User = require('./models/user'),
+  passport = require('passport'),
+  JWTStrategy = require('passport-jwt').Strategy,
+  ExtractJwt = require('passport-jwt').ExtractJwt,
+  jwt = require('jsonwebtoken'),
+  socketIOJwt = require('socketio-jwt');
 
-mongoose.connect(process.env.DBURL || "mongodb://localhost:27017/chat");
+mongoose.connect(process.env.DBURL || 'mongodb://localhost:27017/chat');
 mongoose.Promise = Promise;
 // mongoose.set("debug", true);
 // let messages = [];
 let users = {};
-app.use(express.static("client"));
+app.use(express.static('client'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // Strategy Configuration
 const jwtOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: process.env.SECRET || "keyboardcat"
+  secretOrKey: process.env.SECRET || 'keyboardcat'
 };
 passport.use(
   new JWTStrategy(jwtOptions, async (payload, next) => {
     let user;
     try {
-      user = await User.findByUsername(payload.username);
+      user = await User.findById(payload.id);
     } catch (err) {
       console.log(err);
       next(err);
@@ -42,22 +43,28 @@ passport.use(
 );
 app.use(passport.initialize());
 
-app.get("/register", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "client", "register.html"));
+app.get('/register', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'client', 'register.html'));
 });
-app.get("/login", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "client", "login.html"));
+
+app.get('/login', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'client', 'login.html'));
 });
-app.post("/api/login", async (req, res) => {
+
+app.get('/profile', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'client', 'profile.html'));
+});
+
+app.post('/api/login', async (req, res) => {
   // console.log('request received', req.body);
   let name, password;
-  if (req.body.name && req.body.password) {
-    name = req.body.name;
+  if (req.body.username && req.body.password) {
+    name = req.body.username;
     password = req.body.password;
   } else {
     return res.json({
       error: true,
-      message: "Username or password not supplied"
+      message: 'Username or password not supplied'
     });
   }
   let user;
@@ -67,7 +74,7 @@ app.post("/api/login", async (req, res) => {
     console.error(err);
   }
   if (!user) {
-    return res.json({ error: true, message: "No such user found" });
+    return res.json({ error: true, message: 'No such user found' });
   }
 
   user.authenticate(password, (err1, user, err2) => {
@@ -76,11 +83,15 @@ app.post("/api/login", async (req, res) => {
     if (err) return res.json({ message: err.message });
     const payload = { id: user._id };
     const token = jwt.sign(payload, jwtOptions.secretOrKey);
-    return res.json({ error: false, message: "ok", token: token });
+    return res.json({
+      error: false,
+      message: 'Login successful',
+      token: token
+    });
   });
 });
 
-app.post("/api/register", (req, res) => {
+app.post('/api/register', (req, res) => {
   User.register(
     new User({ username: req.body.username }),
     req.body.password,
@@ -93,14 +104,35 @@ app.post("/api/register", (req, res) => {
       const token = jwt.sign(payload, jwtOptions.secretOrKey);
       return res.json({
         error: false,
-        message: "Account created successfully",
+        message: 'Account created successfully',
         token: token
       });
     }
   );
 });
-app.get("/", (req, res) =>
-  res.sendFile(path.resolve(__dirname, "client", "index.html"))
+
+app.get(
+  '/api/profileinfo',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    res.json(req.user);
+  }
 );
 
-http.listen(3000, () => console.log("Server listening"));
+app.get('/', (req, res) =>
+  res.sendFile(path.resolve(__dirname, 'client', 'index.html'))
+);
+
+io.sockets
+  .on(
+    'connection',
+    socketIOJwt.authorize({
+      secret: jwtOptions.secretOrKey,
+      timeout: 15000
+    })
+  )
+  .on('authenticated', function(socket) {
+    console.log(socket.decoded_token);
+  });
+
+http.listen(3000, () => console.log('Server listening'));

@@ -21,7 +21,8 @@
         </div>
         <div class="form-group">
           <label for="password">Password</label>
-          <input type="password" class="form-control" id="password" placeholder="Password" required>
+          <input type="password" class="form-control" id="password" placeholder="Password"
+            required>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
@@ -50,6 +51,7 @@
               .removeClass("text-danger")
               .addClass("text-success")
               .text(data.message);
+            sessionStorage.setItem('token', data.token);
           }
         }).catch(err => {
           $("#status-text")
