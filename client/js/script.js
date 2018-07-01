@@ -11,12 +11,14 @@ $(function() {
     .catch(console.log);
 
   let socket = io('/');
-  console.log(socket);
+  // console.log(socket);
   socket.on('connect', function() {
     socket
       .on('authenticated', function() {
-        console.log('Authenticated');
+        // console.log('Authenticated');
       })
       .emit('authenticate', { token: sessionStorage.getItem('token') });
   });
+
+  $('#messages-window').scrollTop($('#messages-window').height());
 });

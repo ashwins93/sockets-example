@@ -7,10 +7,48 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Profile</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body>
-  <div id="root"></div>
+  <div class="container">
+    <h1 id="name" class="mb-3">Ashwin</h1>
+    <div class="row">
+      <button class="btn btn-primary">Create New Room</button>
+    </div>
+    <h2>Conversations</h2>
+    <div class="row">
+      <div class="col-3">
+        <ul id="room-list" class="list-group">
+          <li class="list-group-item">Room 1</li>
+          <li class="list-group-item">Room 2</li>
+        </ul>
+      </div>
+      <div id="messages-window" class="col-9">
+        <ul id="messages" class="list-group list-group-flush">
+          <li class="list-group-item">2018-07-02 Ashwin: Hi!</li>
+          <li class="list-group-item">2018-07-02 Ashwin: Hi!</li>
+          <li class="list-group-item">2018-07-02 Ashwin: Hi!</li>
+          <li class="list-group-item">2018-07-02 Ashwin: Hi!</li>
+          <li class="list-group-item">2018-07-02 Ashwin: Hi!</li>
+          <li class="list-group-item">2018-07-02 Ashwin: Hi!</li>
+          <li class="list-group-item">2018-07-02 Ashwin: Hi!</li>
+          <li class="list-group-item">2018-07-02 Ashwin: Hi!</li>
+          <li class="list-group-item">2018-07-02 Ashwin: Hi!</li>
+          <li class="list-group-item">2018-07-02 Ashwin: Hi!</li>
+          <li class="list-group-item">2018-07-02 Ashwin: Hi!</li>
+          <li class="list-group-item">2018-07-02 Ashwin: Hi!</li>
+          <li class="list-group-item">2018-07-02 Ashwin: Hi!</li>
+          <li class="list-group-item">2018-07-02 Ashwin: Hi!</li>
+        </ul>
+      </div>
+    </div>
+    <div class="row justify-content-end">
+      <div class="col-9">
+        <input id="new-message" type="text" class="form-control">
+      </div>
+    </div>
+  </div>
   <script src="/socket.io/socket.io.js"></script>
   <script src="js/jquery-3.3.1.js"></script>
   <script src="js/script.js"></script>

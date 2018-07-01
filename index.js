@@ -132,7 +132,22 @@ io.sockets
     })
   )
   .on('authenticated', function(socket) {
-    console.log(socket.decoded_token);
+    User.findById(socket.decoded_token.id)
+      .then(function(user) {
+        socket.username = user.username;
+        if (!users.hasOwnProperty(user.username)) users[user.username] = {};
+        if (users[user.username].sockets) {
+          users[user.username].sockets.push(socket.id);
+        } else {
+          users[user.username].sockets = [socket.id];
+        }
+      })
+      .catch(console.log);
+    socket.on('disconnect', () => {
+      users[socket.username].sockets = users[socket.username].sockets.filter(
+        id => id !== socket.id
+      );
+    });
   });
 
 http.listen(3000, () => console.log('Server listening'));
