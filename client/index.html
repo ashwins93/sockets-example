@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>SocketIO Chat Rooms</title>
+</head>
+
+<body>
+  <h1>Hello World</h1>
+  <div>
+    <label>
+      Secret
+      <input id="secret" type="text">
+    </label>
+  </div>
+  <label>Your Name</label>
+  <input id="name" type="text">
+  <input id="messageBox" type="text">
+  <p id="typing"></p>
+  <ul id="messages"></ul>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/jquery-3.3.1.js"></script>
+  <script src="/js/script.js"></script>
+</body>
+
+</html>
