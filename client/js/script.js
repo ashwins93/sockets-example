@@ -20,5 +20,20 @@ $(function() {
       .emit('authenticate', { token: sessionStorage.getItem('token') });
   });
 
-  $('#messages-window').scrollTop($('#messages-window').height());
+  scrollMsgToBottom();
+
+  $('#new-message').keypress(function(e) {
+    if (e.which === 13) {
+      $('<li>')
+        .appendTo($('#messages'))
+        .text($(this).val())
+        .addClass('list-group-item');
+      $(this).val('');
+      scrollMsgToBottom();
+    }
+  });
 });
+
+function scrollMsgToBottom() {
+  $('#messages-window').scrollTop($('#messages-window').height());
+}
