@@ -157,4 +157,4 @@ io.sockets
     });
   });
 
-http.listen(3000, () => console.log('Server listening'));
+http.listen(process.env.PORT || 3000, () => console.log('Server listening'));
