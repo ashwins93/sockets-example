@@ -12,7 +12,7 @@ const express = require('express'),
   jwt = require('jsonwebtoken'),
   socketIOJwt = require('socketio-jwt');
 
-mongoose.connect(process.env.DBURL || 'mongodb://localhost:27017/chat');
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/chat');
 mongoose.Promise = Promise;
 // mongoose.set("debug", true);
 // let messages = [];
